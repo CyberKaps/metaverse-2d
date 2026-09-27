@@ -120,9 +120,86 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  username: 'username',
+  password: 'password',
+  avatarId: 'avatarId',
+  role: 'role'
+};
+
+exports.Prisma.SpaceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  width: 'width',
+  height: 'height',
+  thumbnail: 'thumbnail',
+  creatorId: 'creatorId'
+};
+
+exports.Prisma.SpaceElementsScalarFieldEnum = {
+  id: 'id',
+  elementId: 'elementId',
+  spaceId: 'spaceId',
+  x: 'x',
+  y: 'y'
+};
+
+exports.Prisma.ElementScalarFieldEnum = {
+  id: 'id',
+  width: 'width',
+  height: 'height',
+  imageUrl: 'imageUrl'
+};
+
+exports.Prisma.MapScalarFieldEnum = {
+  id: 'id',
+  width: 'width',
+  height: 'height',
+  name: 'name'
+};
+
+exports.Prisma.MapElementsScalarFieldEnum = {
+  id: 'id',
+  mapId: 'mapId',
+  elementId: 'elementId',
+  x: 'x',
+  y: 'y'
+};
+
+exports.Prisma.AvatarScalarFieldEnum = {
+  id: 'id',
+  imageUrl: 'imageUrl',
+  name: 'name'
+};
+
+exports.Prisma.SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+exports.Role = exports.$Enums.Role = {
+  Admin: 'Admin',
+  User: 'User'
+};
 
 exports.Prisma.ModelName = {
-
+  User: 'User',
+  Space: 'Space',
+  spaceElements: 'spaceElements',
+  Element: 'Element',
+  Map: 'Map',
+  MapElements: 'MapElements',
+  Avatar: 'Avatar'
 };
 
 /**

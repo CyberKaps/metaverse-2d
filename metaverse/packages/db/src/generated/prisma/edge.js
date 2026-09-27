@@ -92,9 +92,86 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  username: 'username',
+  password: 'password',
+  avatarId: 'avatarId',
+  role: 'role'
+};
+
+exports.Prisma.SpaceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  width: 'width',
+  height: 'height',
+  thumbnail: 'thumbnail',
+  creatorId: 'creatorId'
+};
+
+exports.Prisma.SpaceElementsScalarFieldEnum = {
+  id: 'id',
+  elementId: 'elementId',
+  spaceId: 'spaceId',
+  x: 'x',
+  y: 'y'
+};
+
+exports.Prisma.ElementScalarFieldEnum = {
+  id: 'id',
+  width: 'width',
+  height: 'height',
+  imageUrl: 'imageUrl'
+};
+
+exports.Prisma.MapScalarFieldEnum = {
+  id: 'id',
+  width: 'width',
+  height: 'height',
+  name: 'name'
+};
+
+exports.Prisma.MapElementsScalarFieldEnum = {
+  id: 'id',
+  mapId: 'mapId',
+  elementId: 'elementId',
+  x: 'x',
+  y: 'y'
+};
+
+exports.Prisma.AvatarScalarFieldEnum = {
+  id: 'id',
+  imageUrl: 'imageUrl',
+  name: 'name'
+};
+
+exports.Prisma.SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+exports.Role = exports.$Enums.Role = {
+  Admin: 'Admin',
+  User: 'User'
+};
 
 exports.Prisma.ModelName = {
-
+  User: 'User',
+  Space: 'Space',
+  spaceElements: 'spaceElements',
+  Element: 'Element',
+  Map: 'Map',
+  MapElements: 'MapElements',
+  Avatar: 'Avatar'
 };
 /**
  * Create the Client
@@ -104,10 +181,10 @@ const config = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n"
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id       String  @id @unique @default(cuid())\n  username String  @unique\n  password String  @unique\n  avatarId String\n  role     Role\n  spaces   Space[]\n  avtar    Avatar  @relation(fields: [avatarId], references: [id])\n}\n\nmodel Space {\n  id        String          @id @unique @default(cuid())\n  name      String\n  width     Int\n  height    Int?\n  thumbnail String?\n  creatorId String\n  creator   User            @relation(fields: [creatorId], references: [id])\n  elements  spaceElements[]\n}\n\nmodel spaceElements {\n  id        String  @id @unique @default(cuid())\n  elementId String\n  spaceId   String\n  x         Int\n  y         Int\n  space     Space   @relation(fields: [spaceId], references: [id])\n  element   Element @relation(fields: [elementId], references: [id])\n}\n\nmodel Element {\n  id          String          @id @unique @default(cuid())\n  width       Int\n  height      Int\n  imageUrl    String\n  spaces      spaceElements[]\n  mapElements MapElements[]\n}\n\nmodel Map {\n  id          String        @id @unique @default(cuid())\n  width       Int\n  height      Int\n  name        String\n  mapElements MapElements[]\n}\n\nmodel MapElements {\n  id        String  @id @unique @default(cuid())\n  mapId     String\n  elementId String\n  x         Int?\n  y         Int?\n  map       Map     @relation(fields: [mapId], references: [id])\n  element   Element @relation(fields: [elementId], references: [id])\n}\n\nmodel Avatar {\n  id       String  @id @unique @default(cuid())\n  imageUrl String?\n  name     String?\n  user     User[]\n}\n\nenum Role {\n  Admin\n  User\n}\n"
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"avatarId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"spaces\",\"kind\":\"object\",\"type\":\"Space\",\"relationName\":\"SpaceToUser\"},{\"name\":\"avtar\",\"kind\":\"object\",\"type\":\"Avatar\",\"relationName\":\"AvatarToUser\"}],\"dbName\":null},\"Space\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"width\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"height\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"thumbnail\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"creatorId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"creator\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SpaceToUser\"},{\"name\":\"elements\",\"kind\":\"object\",\"type\":\"spaceElements\",\"relationName\":\"SpaceTospaceElements\"}],\"dbName\":null},\"spaceElements\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"elementId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"spaceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"x\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"y\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"space\",\"kind\":\"object\",\"type\":\"Space\",\"relationName\":\"SpaceTospaceElements\"},{\"name\":\"element\",\"kind\":\"object\",\"type\":\"Element\",\"relationName\":\"ElementTospaceElements\"}],\"dbName\":null},\"Element\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"width\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"height\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"imageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"spaces\",\"kind\":\"object\",\"type\":\"spaceElements\",\"relationName\":\"ElementTospaceElements\"},{\"name\":\"mapElements\",\"kind\":\"object\",\"type\":\"MapElements\",\"relationName\":\"ElementToMapElements\"}],\"dbName\":null},\"Map\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"width\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"height\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mapElements\",\"kind\":\"object\",\"type\":\"MapElements\",\"relationName\":\"MapToMapElements\"}],\"dbName\":null},\"MapElements\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mapId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"elementId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"x\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"y\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"map\",\"kind\":\"object\",\"type\":\"Map\",\"relationName\":\"MapToMapElements\"},{\"name\":\"element\",\"kind\":\"object\",\"type\":\"Element\",\"relationName\":\"ElementToMapElements\"}],\"dbName\":null},\"Avatar\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"imageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"AvatarToUser\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.compilerWasm = {
   getRuntime: async () => require('./query_compiler_bg.js'),
